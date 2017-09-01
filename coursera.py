@@ -21,11 +21,18 @@ def make_course_info_tags(soup):
     return course_info_tags
 
 
-def get_course_info(soup):
+def get_course_countinuance(soup):
+    course_continuance = soup.find_all('div', class_='week-heading body-2-text')
+    return len(course_continuance)
+
+
+def get_course_info(course_page):
+    soup = BeautifulSoup(course_page.content, 'html.parser')
     course_info_tags = make_course_info_tags(soup)
     course_info = {}
-    for course_tag, course_info_tag in course_info_tags.items():
-        course_info[course_tag] = course_info_tag.get_text() if course_info_tag else None
+    for tag, tag_info in course_info_tags.items():
+        course_info[tag] = tag_info.get_text() if tag_info else None
+    course_info['continuance_of_course'] = get_course_countinuance(soup)
     return course_info
 
 
@@ -39,8 +46,9 @@ if __name__ == '__main__':
     courses = []
     for course in course_list:
         course_page = requests.get(course)
-        soup = BeautifulSoup(course_page.content, 'html.parser')
-        courses.append(get_course_info(soup))
+        courses.append(get_course_info(course_page))
+    print(courses)
+    
     book = Workbook()
     sheet = book.active
-    book.save("sample.xlsx")
+    book.save('')
