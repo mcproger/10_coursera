@@ -48,9 +48,8 @@ def get_course_info(course_page):
 
 
 def output_courses_info_to_xlsx(course_quant, work_book, work_sheet, courses, filepath):
-    for work_sheet_row in range(course_quant):
-        for course in courses:
-            work_sheet.append(list(course.values()))
+    for course in courses:
+        work_sheet.append(list(course.values()))
     work_book.save(filepath)
     return None
 
