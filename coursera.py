@@ -21,7 +21,7 @@ def get_courses_list(course_list_page_url, course_quant):
     return course_list[:course_quant]
 
 
-def make_course_info_tags(soup):
+def get_course_info_tags(soup):
     course_info_tags = {
         'title_of_course': soup.find('h1', class_='title display-3-text'),
         'language_of_course': soup.find('div', class_='language-info'),
@@ -39,7 +39,7 @@ def get_course_countinuance(soup):
 
 def get_course_info(course_page):
     soup = BeautifulSoup(course_page.content, 'html.parser')
-    course_info_tags = make_course_info_tags(soup)
+    course_info_tags = get_course_info_tags(soup)
     course_info = {}
     for tag, tag_info in course_info_tags.items():
         course_info[tag] = tag_info.get_text() if tag_info else None
@@ -47,7 +47,7 @@ def get_course_info(course_page):
     return course_info
 
 
-def output_courses_info_to_xlsx(course_quant, work_book, work_sheet, courses, filepath):
+def output_courses_info_to_xlsx(work_book, work_sheet, courses, filepath):
     for course in courses:
         work_sheet.append(list(course.values()))
     work_book.save(filepath)
@@ -65,4 +65,4 @@ if __name__ == '__main__':
     work_book = Workbook()
     work_sheet = work_book.active
     course_info_xlsx = output_courses_info_to_xlsx(
-        args.course_quant, work_book, work_sheet, courses, args.filepath)
+        work_book, work_sheet, courses, args.filepath)
