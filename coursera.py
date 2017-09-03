@@ -1,14 +1,24 @@
 import requests
+import argparse
 from lxml import html
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 
-def get_courses_list(course_list_page_url):
+def get_argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('course_quant', type=int)
+    parser.add_argument('filepath', type=str,
+                        help='Filepath for result course info file')
+    args = parser.parse_args()
+    return args
+
+
+def get_courses_list(course_list_page_url, course_quant):
     course_list_page = requests.get(course_list_page_url)
     html_content = html.fromstring(course_list_page.content)
     course_list = html_content.xpath('//url/loc/text()')
-    return course_list[:20]
+    return course_list[:course_quant]
 
 
 def make_course_info_tags(soup):
@@ -22,7 +32,8 @@ def make_course_info_tags(soup):
 
 
 def get_course_countinuance(soup):
-    course_continuance = soup.find_all('div', class_='week-heading body-2-text')
+    course_continuance = soup.find_all(
+        'div', class_='week-heading body-2-text')
     return len(course_continuance)
 
 
@@ -36,19 +47,23 @@ def get_course_info(course_page):
     return course_info
 
 
-def output_courses_info_to_xlsx(filepath):
-    pass
+def output_courses_info_to_xlsx(course_quant, work_book, work_sheet, courses, filepath):
+    for work_sheet_row in range(course_quant):
+        for course in courses:
+            work_sheet.append(list(course.values()))
+    work_book.save(filepath)
+    return None
 
 
 if __name__ == '__main__':
+    args = get_argparser()
     course_list_page_url = 'https://www.coursera.org/sitemap~www~courses.xml'
-    course_list = get_courses_list(course_list_page_url)
+    course_list = get_courses_list(course_list_page_url, args.course_quant)
     courses = []
     for course in course_list:
         course_page = requests.get(course)
         courses.append(get_course_info(course_page))
-    print(courses)
-    
-    book = Workbook()
-    sheet = book.active
-    book.save('')
+    work_book = Workbook()
+    work_sheet = work_book.active
+    course_info_xlsx = output_courses_info_to_xlsx(
+        args.course_quant, work_book, work_sheet, courses, args.filepath)
