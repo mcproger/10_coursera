@@ -7,7 +7,6 @@ This script fetch information about courses from xml list of courses from [cours
 
 ```
 $ python3 coursera.py <quantity-of-courses> <filepath-for-saving-xlsx-file>
-
 ```
 
 
@@ -17,7 +16,6 @@ For installing requirements in directory of your project make:
 
 ```
 $ pip install -r requirements.txt
-
 ```
 
 
