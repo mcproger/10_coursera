@@ -51,7 +51,6 @@ def output_courses_info_to_xlsx(work_book, work_sheet, courses, filepath):
     for course in courses:
         work_sheet.append(list(course.values()))
     work_book.save(filepath)
-    return None
 
 
 if __name__ == '__main__':
