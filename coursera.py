@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 
-def get_argparser():
+def get_console_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('course_quant', type=int)
     parser.add_argument('filepath', type=str,
@@ -55,7 +55,7 @@ def output_courses_info_to_xlsx(work_book, work_sheet, courses, filepath):
 
 
 if __name__ == '__main__':
-    args = get_argparser()
+    args = get_console_arguments()
     course_list_page_url = 'https://www.coursera.org/sitemap~www~courses.xml'
     course_list = get_courses_list(course_list_page_url, args.course_quant)
     courses = []
