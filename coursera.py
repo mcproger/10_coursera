@@ -37,8 +37,8 @@ def get_course_countinuance(soup):
     return len(course_continuance)
 
 
-def get_course_info(course_page):
-    soup = BeautifulSoup(course_page.content, 'html.parser')
+def get_course_info(course_page_html_content):
+    soup = BeautifulSoup(course_page_html_content, 'html.parser')
     course_info_tags = get_course_info_tags(soup)
     course_info = {}
     for tag, tag_info in course_info_tags.items():
@@ -60,8 +60,8 @@ if __name__ == '__main__':
     course_list = get_courses_list(course_list_page_url, args.course_quant)
     courses = []
     for course in course_list:
-        course_page = requests.get(course)
-        courses.append(get_course_info(course_page))
+        course_page_html_content = requests.get(course).content
+        courses.append(get_course_info(course_page_html_content))
     work_book = Workbook()
     work_sheet = work_book.active
     course_info_xlsx = output_courses_info_to_xlsx(
